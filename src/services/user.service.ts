@@ -43,7 +43,7 @@ export const signToken = async (user: IUsers) => {
   );
 
   //Create a Session
-  redisClient.set(user?._id!.toString(), JSON.stringify(user));
+  //redisClient.set(user?._id!.toString(), JSON.stringify(user));
   //   // Return access token
   return { access_token };
 };

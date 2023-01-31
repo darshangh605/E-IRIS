@@ -10,25 +10,21 @@ import connectRedis from "connect-redis";
 import userRouter from "./routes/user.route";
 import authrouter from "./routes/auth.route";
 import redisClient from "./utils/connectRedis";
+import studentRouter from "./routes/students.route";
 dotenv.config();
 const app = express();
 app.use(express.json({ limit: "10kb" }));
 const RedisStore = connectRedis(session);
 // 2. Cookie Parser
-app.use(cookieParser("skilldataEirisappprivatekey"));
+app.use(cookieParser(process.env.ACCESS_TOKEN_PRIVATE_KEY));
 app.use(express.urlencoded({ extended: true }));
 app.use(session());
-const port = config.get<number>("port");
+const port = process.env.PORT;
 // 3. Logger
 if (process.env.NODE_ENV === "development") app.use(morgan("dev"));
 
 // 4. Cors
-app.use(
-  cors({
-    origin: config.get<string>("origin"),
-    credentials: true,
-  })
-);
+app.use(cors());
 
 // 5. Routes
 
@@ -47,7 +43,7 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
 app.use(
   session({
     store: new RedisStore({ client: redisClient }),
-    secret: "skilldataEirisappprivatekey",
+    secret: process.env.ACCESS_TOKEN_PRIVATE_KEY!,
     resave: false,
     saveUninitialized: false,
     cookie: {
@@ -59,6 +55,7 @@ app.use(
 );
 app.use("/api/users", userRouter);
 app.use("/api/auth", authrouter);
+app.use("/api/students", studentRouter);
 app.listen(port, () => {
   console.log(`Server started on port: ${port}`);
   connectDB();

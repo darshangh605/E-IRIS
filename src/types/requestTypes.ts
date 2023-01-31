@@ -1,13 +1,16 @@
+import { IAcademicDetails } from "../models/students.model";
+import { IContactDetails } from "../models/users.model";
+
 interface IRegisterUserRequest {
   firstName: string;
   middleName?: string;
   lastName: string;
   userName: string;
   password: string;
-  pwdConfirm: string;
   isActive: boolean;
-  roleVal: string;
-  roleRef: string;
+
+  role: string;
+  roleCode: string;
   contactNo: number;
   email: string;
   lastLoggedIn?: Date;
@@ -29,14 +32,8 @@ interface IRegisterUserRequest {
   socialCategoryCode: number;
   obcSubCategory?: string;
   obcSubCategoryCode?: number;
-  residentialAddress: string;
-  permanentAddress: string;
-  state: string;
-  stateRef: number;
-  district: string;
-  districtRef: number;
-  city: string;
-  zipCode: number;
+  residentialAddress?: IContactDetails;
+  permanentAddress?: IContactDetails;
 }
 
 interface IAddStudents {
@@ -58,13 +55,8 @@ interface IAddStudents {
   socialCategoryCode: number;
   obcSubCategory?: string;
   obcSubCategoryCode?: number;
-  residentialAddress: string;
-  permanentAddress: string;
-  state: string;
-  stateRef: number;
-  district: string;
-  districtRef: number;
-  city: string;
-  zipCode: number;
+  residentialAddress: IContactDetails;
+  permanentAddress: IContactDetails;
+  academicDetails: IAcademicDetails;
 }
 export { IRegisterUserRequest, IAddStudents };
