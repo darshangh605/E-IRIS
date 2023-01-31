@@ -12,11 +12,10 @@ interface IUsers {
   middleName?: string;
   lastName: string;
   userName: string;
-  password: string;
-  pwdConfirm: string;
+  password: string | undefined;
   isActive: boolean;
-  roleVal: string;
-  roleRef: string;
+  role: string;
+  roleCode: string;
   contactNo: number;
   email: string;
   lastLoggedIn?: Date;
@@ -38,24 +37,44 @@ interface IUsers {
   socialCategoryCode: number;
   obcSubCategory?: string;
   obcSubCategoryCode?: number;
-  residentialAddress: string;
-  permanentAddress: string;
+  residentialAddress: IContactDetails;
+  permanentAddress: IContactDetails;
+  // state: string;
+  // stateRef: number;
+  // district: string;
+  // districtRef: number;
+  // city: string;
+  // zipCode: number;
+
+  // comparePasswords(
+  //   candidatePassword: string,
+  //   hashedPassword: string
+  // ): Promise<boolean>;
+  // createPasswordResetToken(): Promise<string>;
+  // passwordChangedAt?: Date | undefined;
+  // passwordResetToken?: String | undefined;
+  // passwordResetExpires?: Date | undefined;
+}
+
+interface IContactDetails {
+  address: string;
   state: string;
   stateRef: number;
   district: string;
   districtRef: number;
   city: string;
   zipCode: number;
-
-  comparePasswords(
-    candidatePassword: string,
-    hashedPassword: string
-  ): Promise<boolean>;
-  createPasswordResetToken(): Promise<string>;
-  passwordChangedAt?: Date | undefined;
-  passwordResetToken?: String | undefined;
-  passwordResetExpires?: Date | undefined;
 }
+
+const contactSchema: Schema = new Schema<IContactDetails>({
+  address: { type: String, required: true },
+  state: { type: String, required: true },
+  stateRef: { type: Number, required: true },
+  district: { type: String, required: true },
+  districtRef: { type: Number, required: true },
+  city: { type: String, required: true },
+  zipCode: { type: Number, required: true },
+});
 
 const userSchema: Schema = new Schema<IUsers>(
   {
@@ -64,12 +83,11 @@ const userSchema: Schema = new Schema<IUsers>(
     lastName: { type: String, required: true, maxlength: 50 },
     userName: { type: String, required: true, unique: true, maxlength: 50 },
     password: { type: String, required: true, maxlength: 20 },
-    pwdConfirm: { type: String, required: true, maxlength: 20 },
     isActive: { type: Boolean, required: true },
-    roleVal: { type: String, required: true },
-    roleRef: { type: String, required: true },
+    role: { type: String, required: true },
+    roleCode: { type: String, required: true },
     contactNo: { type: Number, required: true, maxlength: 10 },
-    email: { type: String, unique: true },
+    email: { type: String, unique: true, required: true },
     lastLoggedIn: { type: Date },
     title: { type: String, required: true },
     titleCode: { type: Number, required: true },
@@ -89,17 +107,17 @@ const userSchema: Schema = new Schema<IUsers>(
     socialCategoryCode: { type: Number, required: true },
     obcSubCategory: { type: String },
     obcSubCategoryCode: { type: Number },
-    residentialAddress: { type: String, required: true },
-    permanentAddress: { type: String, required: true },
-    state: { type: String, required: true },
-    stateRef: { type: Number, required: true },
-    district: { type: String, required: true },
-    districtRef: { type: Number, required: true },
-    city: { type: String, required: true },
-    zipCode: { type: Number, required: true },
-    passwordChangedAt: { type: Date },
-    passwordResetToken: { type: String },
-    passwordResetExpires: { type: Date },
+    residentialAddress: { type: contactSchema, required: true },
+    permanentAddress: { type: contactSchema, required: true },
+    // state: { type: String, required: true },
+    // stateRef: { type: Number, required: true },
+    // district: { type: String, required: true },
+    // districtRef: { type: Number, required: true },
+    // city: { type: String, required: true },
+    // zipCode: { type: Number, required: true },
+    // passwordChangedAt: { type: Date },
+    // passwordResetToken: { type: String },
+    // passwordResetExpires: { type: Date },
   },
   {
     collection: "users",
@@ -112,7 +130,7 @@ userSchema.pre("save", async function (next) {
   //if (!this.isModified("password")) return next();
 
   // Hash the password with cost of 12
-  this.pwd = await bcrypt.hash(this.pwd, 12);
+  this.password = await bcrypt.hash(this.password, 12);
 
   // Delete passwordConfirm field
   this.pwdConfirm = undefined;
@@ -141,4 +159,4 @@ userSchema.methods.createPasswordResetToken = function () {
 };
 
 const Users = mongoose.model<IUsers>("Users", userSchema);
-export { Users, IUsers };
+export { Users, IUsers, IContactDetails };
