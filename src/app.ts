@@ -4,7 +4,7 @@ import * as dotenv from "dotenv";
 import connectDB from "./utils/connectDb";
 import cookieParser from "cookie-parser";
 import session from "express-session";
-import morgan from "morgan";
+//import morgan from "morgan";
 import cors from "cors";
 import connectRedis from "connect-redis";
 import userRouter from "./routes/user.route";
@@ -21,7 +21,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(session());
 const port = process.env.PORT;
 // 3. Logger
-if (process.env.NODE_ENV === "development") app.use(morgan("dev"));
+//if (process.env.NODE_ENV === "development") app.use(morgan("dev"));
 
 // 4. Cors
 app.use(cors());
