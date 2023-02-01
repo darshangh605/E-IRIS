@@ -3,7 +3,7 @@ import { CookieOptions, NextFunction, Request, Response } from "express";
 import { IUsers, Users } from "../models/users.model";
 import { createUser, findUser, signToken } from "../services/user.service";
 import AppError from "../utils/appError";
-import sendEmail from "../utils/sendMail";
+//import sendEmail from "../utils/sendMail";
 import crypto from "crypto";
 import { IRegisterUserRequest } from "../types/requestTypes";
 import redisClient from "../utils/connectRedis";
@@ -14,9 +14,9 @@ export const excludedFields = ["password"];
 // Cookie options
 const accessTokenCookieOptions: CookieOptions = {
   expires: new Date(
-    Date.now() + config.get<number>("accessTokenExpiresIn") * 60 * 1000
+    Date.now() + parseInt(process.env.ACCESS_TOKEN_EXPIRES_IN!) * 60 * 1000
   ),
-  maxAge: config.get<number>("accessTokenExpiresIn") * 60 * 1000,
+  maxAge: parseInt(process.env.ACCESS_TOKEN_EXPIRES_IN!) * 60 * 1000,
   httpOnly: true,
   sameSite: "lax",
 };
@@ -120,7 +120,7 @@ export const loginHandler = async (
       userDetails: user,
     });
   } catch (err: any) {
-    res.status(200).json({
+    res.status(500).json({
       status: StatusCodes.INTERNAL_SERVER_ERROR,
       statusCode: "Something went wrong from our side",
     });
@@ -171,11 +171,12 @@ export const loginHandler = async (
 //   }
 // };
 
-const createSendToken = (user, statusCode, res) => {
+const createSendToken = (user: any, statusCode: any, res: any) => {
   const token = signToken(user._id);
   const cookieOptions = {
     expires: new Date(
-      Date.now() + process.env.JWT_COOKIE_EXPIRES_IN! * 24 * 60 * 60 * 1000
+      Date.now() +
+        parseInt(process.env.JWT_COOKIE_EXPIRES_IN!) * 24 * 60 * 60 * 1000
     ),
     httpOnly: true,
     secure: false,

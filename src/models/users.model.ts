@@ -37,8 +37,8 @@ interface IUsers {
   socialCategoryCode: number;
   obcSubCategory?: string;
   obcSubCategoryCode?: number;
-  residentialAddress: IContactDetails;
-  permanentAddress: IContactDetails;
+  residentialAddress: IContactDetails | undefined;
+  permanentAddress: IContactDetails | undefined;
   // state: string;
   // stateRef: number;
   // district: string;
