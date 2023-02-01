@@ -38,7 +38,7 @@ export const signToken = async (user: IUsers) => {
   const access_token = signJwt(
     { sub: user._id },
     {
-      expiresIn: `${config.get<number>("accessTokenExpiresIn")}m`,
+      expiresIn: `${parseInt(process.env.ACCESS_TOKEN_EXPIRES_IN!)}m`,
     }
   );
 
