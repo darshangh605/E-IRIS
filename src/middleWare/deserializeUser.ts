@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import { StatusCodes } from "http-status-codes";
 import { findUserById } from "../services/user.service";
 import AppError from "../utils/appError";
 import redisClient from "../utils/connectRedis";
@@ -22,7 +23,10 @@ export const deserializeUser = async (
     }
 
     if (!access_token) {
-      return next(new AppError("You are not logged in", 401));
+      return res.status(401).json({
+        status: StatusCodes.UNAUTHORIZED,
+        message: "You are not logged in.",
+      });
     }
 
     // Validate Access Token

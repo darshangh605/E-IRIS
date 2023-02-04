@@ -82,7 +82,7 @@ const userSchema: Schema = new Schema<IUsers>(
     middleName: { type: String, maxlength: 50 },
     lastName: { type: String, required: true, maxlength: 50 },
     userName: { type: String, required: true, unique: true, maxlength: 50 },
-    password: { type: String, required: true, maxlength: 20 },
+    password: { type: String, required: true, maxlength: 100 },
     isActive: { type: Boolean, required: true },
     role: { type: String, required: true },
     roleCode: { type: String, required: true },
@@ -109,15 +109,6 @@ const userSchema: Schema = new Schema<IUsers>(
     obcSubCategoryCode: { type: Number },
     residentialAddress: { type: contactSchema, required: true },
     permanentAddress: { type: contactSchema, required: true },
-    // state: { type: String, required: true },
-    // stateRef: { type: Number, required: true },
-    // district: { type: String, required: true },
-    // districtRef: { type: Number, required: true },
-    // city: { type: String, required: true },
-    // zipCode: { type: Number, required: true },
-    // passwordChangedAt: { type: Date },
-    // passwordResetToken: { type: String },
-    // passwordResetExpires: { type: Date },
   },
   {
     collection: "users",
@@ -125,17 +116,17 @@ const userSchema: Schema = new Schema<IUsers>(
   }
 );
 
-userSchema.pre("save", async function (next) {
-  // Only run this function if password was actually modified
-  //if (!this.isModified("password")) return next();
+// userSchema.pre("save", async function (next) {
+//   // Only run this function if password was actually modified
+//   //if (!this.isModified("password")) return next();
 
-  // Hash the password with cost of 12
-  this.password = await bcrypt.hash(this.password, 12);
+//   // Hash the password with cost of 12
+//   this.password = await bcrypt.hash(this.password, 12);
 
-  // Delete passwordConfirm field
-  this.pwdConfirm = undefined;
-  next();
-});
+//   // Delete passwordConfirm field
+//   this.pwdConfirm = undefined;
+//   next();
+// });
 userSchema.methods.comparePasswords = async function (
   hashedPassword: string,
   candidatePassword: string
