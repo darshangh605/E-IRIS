@@ -43,7 +43,7 @@ export const registerHandler = async (
     contactNo: reqBody.contactNo,
     roleCode: reqBody.roleCode,
     role: reqBody.role,
-    lastLoggedIn: reqBody.lastLoggedIn,
+    //lastLoggedIn: reqBody.lastLoggedIn,
     title: reqBody.title,
     titleCode: reqBody.titleCode,
     gender: reqBody.gender,
@@ -67,7 +67,7 @@ export const registerHandler = async (
   };
   try {
     const user = await createUser(userObj);
-
+    user.password = undefined;
     res.status(201).json({
       status: "success",
       data: {
@@ -94,14 +94,18 @@ export const loginHandler = async (
     const { email } = req.body as IUsers;
     // Get the user from the collection
     const user = await findUser({ email: email });
-
-    // Check if user exist and password is correct
-    if (!user || !user.password || user?.password !== req.body.password) {
+    if (!user) {
+      return res.status(200).json({
+        status: StatusCodes.NOT_FOUND,
+        statusCode: "The User does not exists with this emailId",
+      });
+    } else if (!user.password || user?.password !== req.body.password) {
       return res.status(200).json({
         status: StatusCodes.UNAUTHORIZED,
         statusCode: "Invalid credentials",
       });
     }
+    // Check if user exist and password is correct
 
     // Create an Access Token
     const { access_token } = await signToken(user);
@@ -123,6 +127,7 @@ export const loginHandler = async (
     res.status(500).json({
       status: StatusCodes.INTERNAL_SERVER_ERROR,
       statusCode: "Something went wrong from our side",
+      error: err,
     });
   }
 };
