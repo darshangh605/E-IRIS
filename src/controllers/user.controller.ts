@@ -108,6 +108,7 @@ export const getDataToLoadScreen = async (req: Request, res: Response) => {
           (x) => x.description === "obcsubcategory"
         ),
         states: statesAndDistricts,
+        semester: masterData.filter((x) => x.description === "semester"),
       };
       res.status(200).json({
         status: StatusCodes.OK,
