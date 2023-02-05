@@ -18,4 +18,5 @@ export const studentEnrollMasters = [
   "religion",
   "socialcategory",
   "obcsubcategory",
+  "semester",
 ];
