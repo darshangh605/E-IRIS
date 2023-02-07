@@ -10,13 +10,11 @@ import redisClient from "../utils/connectRedis";
 import { StatusCodes } from "http-status-codes";
 // Exclude this fields from the response
 export const excludedFields = ["password"];
-
+const expiresIn = "25";
 // Cookie options
 const accessTokenCookieOptions: CookieOptions = {
-  expires: new Date(
-    Date.now() + parseInt(process.env.ACCESS_TOKEN_EXPIRES_IN!) * 60 * 1000
-  ),
-  maxAge: parseInt(process.env.ACCESS_TOKEN_EXPIRES_IN!) * 60 * 1000,
+  expires: new Date(Date.now() + parseInt(expiresIn) * 60 * 1000),
+  maxAge: parseInt(expiresIn!) * 60 * 1000,
   httpOnly: true,
   sameSite: "lax",
 };
