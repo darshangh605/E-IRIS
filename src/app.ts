@@ -16,10 +16,11 @@ const app = express();
 app.use(express.json({ limit: "10kb" }));
 const RedisStore = connectRedis(session);
 // 2. Cookie Parser
-app.use(cookieParser(process.env.ACCESS_TOKEN_PRIVATE_KEY));
+//app.use(cookieParser(process.env.ACCESS_TOKEN_PRIVATE_KEY));
+app.use(cookieParser("skilldataEirisappprivatekey"));
 app.use(express.urlencoded({ extended: true }));
 app.use(session());
-const port = process.env.PORT;
+const port = process.env.PORT || 8000;
 // 3. Logger
 //if (process.env.NODE_ENV === "development") app.use(morgan("dev"));
 
@@ -42,8 +43,11 @@ app.use(cors());
 // });
 app.use(
   session({
-    store: new RedisStore({ client: redisClient }),
-    secret: process.env.ACCESS_TOKEN_PRIVATE_KEY!,
+    store: new RedisStore({
+      /* client: redisClient */ client: "skilldataEirisappprivatekey",
+    }),
+    secret:
+      /* process.env.ACCESS_TOKEN_PRIVATE_KEY! */ "skilldataEirisappprivatekey",
     resave: false,
     saveUninitialized: false,
     cookie: {
