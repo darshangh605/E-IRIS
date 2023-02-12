@@ -76,9 +76,9 @@ app.use((0, express_session_1.default)({
         maxAge: 1000 * 60 * 60, // session max age in miliseconds
     },
 }));
-app.use("users", user_route_1.default);
-app.use("auth", auth_route_1.default);
-app.use("students", students_route_1.default);
+app.use("/users", user_route_1.default);
+app.use("/auth", auth_route_1.default);
+app.use("/students", students_route_1.default);
 app.listen(port, () => {
     console.log(`Server started on port: ${port}`);
     (0, connectDb_1.default)();
