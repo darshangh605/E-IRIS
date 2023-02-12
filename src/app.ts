@@ -57,9 +57,9 @@ app.use(
     },
   })
 );
-app.use("/api/users", userRouter);
-app.use("/api/auth", authrouter);
-app.use("/api/students", studentRouter);
+app.use("users", userRouter);
+app.use("auth", authrouter);
+app.use("students", studentRouter);
 app.listen(port, () => {
   console.log(`Server started on port: ${port}`);
   connectDB();
